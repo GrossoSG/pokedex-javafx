@@ -1,2 +1,2 @@
 # pokedex-javafx
-Uma ferramenta de Pokedex em Java FX
+Uma ferramenta de Pokedex em Java FX.
