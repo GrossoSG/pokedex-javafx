@@ -2,12 +2,14 @@ package org.example;
 
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
+import org.example.service.ComparacaoService;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class TestePokemon {
     public static void main(String[] args) throws SQLException {
+       /*
         PokemonDAO dao = new PokemonDAO();
 
         List<Pokemon> lista = dao.listarTodos();
@@ -78,5 +80,56 @@ public class TestePokemon {
             System.out.println("Resistencias: " + charizard.getResistencias());
             System.out.println("Imunidades: " + charizard.getImunidades());
         }
+
+        */
+
+        PokemonDAO dao = new PokemonDAO();
+        ComparacaoService comparador = new ComparacaoService();
+
+        // Busca dois Pokémon no banco
+        Pokemon p1 = dao.buscarPorNumero(150);
+        Pokemon p2 = dao.buscarPorNumero(151);
+
+        if (p1 == null || p2 == null) {
+            System.out.println("Pokémon não encontrado!");
+            return;
+        }
+
+        System.out.println(p1.getNome() + " VS " + p2.getNome());
+
+        // Compara todos os atributos
+        System.out.println("HP: " +
+                comparador.diferenca(p1.getHp(), p2.getHp()));
+
+        System.out.println("Ataque: " +
+                comparador.diferenca(p1.getAtaque(), p2.getAtaque()));
+
+        System.out.println("Defesa: " +
+                comparador.diferenca(p1.getDefesa(), p2.getDefesa()));
+
+        System.out.println("Ataque Especial: " +
+                comparador.diferenca(p1.getAtaqueEspecial(),
+                        p2.getAtaqueEspecial()));
+
+        System.out.println("Defesa Especial: " +
+                comparador.diferenca(p1.getDefesaEspecial(),
+                        p2.getDefesaEspecial()));
+
+        System.out.println("Velocidade: " +
+                comparador.diferenca(p1.getVelocidade(),
+                        p2.getVelocidade()));
+
+        // Resultado geral
+        System.out.println("Diferença total: " +
+                comparador.diferencaTotal(p1, p2));
+
+        Pokemon vencedor = comparador.maiorTotal(p1, p2);
+
+        if (vencedor != null) {
+            System.out.println("Maior total: " + vencedor.getNome());
+        } else {
+            System.out.println("Empate!");
+        }
+
     }
 }
