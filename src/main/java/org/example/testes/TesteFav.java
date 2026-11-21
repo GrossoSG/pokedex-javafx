@@ -1,5 +1,5 @@
 
-package org.example;
+package org.example.testes;
 
 import org.example.dao.FavoritoDAO;
 import org.example.model.Pokemon;

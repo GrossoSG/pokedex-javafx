@@ -1,11 +1,10 @@
-package org.example;
+package org.example.testes;
 
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 import org.example.service.ComparacaoService;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public class TestePokemon {
     public static void main(String[] args) throws SQLException {

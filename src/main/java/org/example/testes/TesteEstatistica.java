@@ -1,4 +1,4 @@
-package org.example;
+package org.example.testes;
 
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
