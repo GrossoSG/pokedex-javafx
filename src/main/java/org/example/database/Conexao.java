@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Conexao {
 
@@ -20,9 +21,20 @@ public class Conexao {
             );
         }
 
-        // Abre a conexão com o SQLite
-        return DriverManager.getConnection(
+        // AAbre a conexão com o SQLite
+
+        Connection conexao = DriverManager.getConnection(
                 "jdbc:sqlite:" + caminho
         );
+
+        try (Statement comando = conexao.createStatement()) {
+            comando.execute("PRAGMA foreign_keys = ON");
+        } catch (SQLException e) {
+            conexao.close();
+            throw e;
+        }
+
+        return conexao;
+
     }
 }
