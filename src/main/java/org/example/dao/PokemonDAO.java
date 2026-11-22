@@ -47,14 +47,37 @@ public class PokemonDAO {
                 resultado.getBoolean("mitico"),
 
                 // Descrição
-                resultado.getString("descricao")
+                obterColunaOpcional(resultado, "descricao")
         );
+        pokemon.setGenderless(obterBooleanOpcional(resultado, "genderless"));
 
         // Carregar fraquezas, resistências e imunidades
         PokemonDefesaDAO defesaDAO = new PokemonDefesaDAO();
         defesaDAO.carregarDefesas(pokemon, conexao);
 
         return pokemon;
+    }
+
+    private String obterColunaOpcional(ResultSet resultado, String nomeColuna)
+            throws SQLException {
+        ResultSetMetaData metadados = resultado.getMetaData();
+        for (int i = 1; i <= metadados.getColumnCount(); i++) {
+            if (nomeColuna.equalsIgnoreCase(metadados.getColumnLabel(i))) {
+                return resultado.getString(i);
+            }
+        }
+        return null;
+    }
+
+    private boolean obterBooleanOpcional(ResultSet resultado, String nomeColuna)
+            throws SQLException {
+        ResultSetMetaData metadados = resultado.getMetaData();
+        for (int i = 1; i <= metadados.getColumnCount(); i++) {
+            if (nomeColuna.equalsIgnoreCase(metadados.getColumnLabel(i))) {
+                return resultado.getBoolean(i);
+            }
+        }
+        return false;
     }
 
 

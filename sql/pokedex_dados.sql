@@ -1281,3 +1281,9 @@ INSERT INTO pokemon_defesa (numero_pokemon, tipo, relacao) VALUES
     (151, 'ghost', 'fraqueza'),
     (151, 'fighting', 'resistencia'),
     (151, 'psychic', 'resistencia');
+
+UPDATE pokemon
+SET genderless = CASE
+    WHEN numero IN (81, 82, 100, 101, 120, 121, 132, 137, 144, 145, 146, 150, 151) THEN 1
+    ELSE 0
+END;

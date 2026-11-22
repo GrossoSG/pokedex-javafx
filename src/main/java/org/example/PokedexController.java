@@ -12,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -174,8 +175,16 @@ public class PokedexController {
         cartao.setPrefWidth(190);
         cartao.setMinWidth(150);
         cartao.setMaxWidth(Double.MAX_VALUE);
+        cartao.setCursor(Cursor.HAND);
         cartao.setStyle("-fx-background-color: white; -fx-background-radius: 12; "
                 + "-fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-padding: 12;");
+        cartao.setOnMouseClicked(event -> {
+            try {
+                App.mostrarDetalhes(pokemon);
+            } catch (IOException e) {
+                mostrarErro("Erro ao abrir os detalhes", e);
+            }
+        });
 
         Label numero = new Label(String.format("#%03d", pokemon.getNumero()));
         numero.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;");
@@ -194,7 +203,9 @@ public class PokedexController {
 
         javafx.scene.layout.HBox tipos = new javafx.scene.layout.HBox(6);
         tipos.setAlignment(javafx.geometry.Pos.CENTER);
-        tipos.getChildren().add(criarEtiquetaTipo(pokemon.getTipo1()));
+        if (pokemon.getTipo1() != null && !pokemon.getTipo1().isBlank()) {
+            tipos.getChildren().add(criarEtiquetaTipo(pokemon.getTipo1()));
+        }
         if (pokemon.getTipo2() != null && !pokemon.getTipo2().isBlank()) {
             tipos.getChildren().add(criarEtiquetaTipo(pokemon.getTipo2()));
         }

@@ -24,6 +24,7 @@ CREATE TABLE pokemon (
     pseudo_lendario INTEGER NOT NULL CHECK (pseudo_lendario IN (0, 1)),
     lendario INTEGER NOT NULL CHECK (lendario IN (0, 1)),
     mitico INTEGER NOT NULL CHECK (mitico IN (0, 1)),
+    genderless INTEGER NOT NULL DEFAULT 0 CHECK (genderless IN (0, 1)),
     descricao TEXT
 );
 

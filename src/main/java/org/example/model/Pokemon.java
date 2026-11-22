@@ -31,6 +31,7 @@ public class Pokemon {
     private int estagioEvolutivo;
     private String evoluiDe;
     private String evoluiPara;
+    private boolean genderless;
 
     private boolean lendario;
     private boolean mitico;
@@ -193,22 +194,49 @@ public class Pokemon {
         return descricao;
     }
 
+    public String getDescricaoSegura() {
+        return descricao == null || descricao.isBlank()
+                ? "Descrição ainda não cadastrada."
+                : descricao;
+    }
+
+    public String getSexo() {
+        return genderless ? "Sem gênero definido" : "Macho & Fêmea";
+    }
+
+    public boolean isGenderless() {
+        return genderless;
+    }
+
+    public void setGenderless(boolean genderless) {
+        this.genderless = genderless;
+    }
+
     public List<String> getFraquezas() {
-        return List.copyOf(fraquezas);
+        return valoresDefensivos(fraquezas);
     }
 
     public List<String> getResistencias() {
-        return List.copyOf(resistencias);
+        return valoresDefensivos(resistencias);
     }
 
     public List<String> getImunidades() {
-        return List.copyOf(imunidades);
+        return valoresDefensivos(imunidades);
+    }
+
+    private List<String> valoresDefensivos(List<String> valores) {
+        return valores.stream()
+                .filter(valor -> valor != null && !valor.isBlank())
+                .toList();
     }
 
     // Relação defensiva
 
 
     public void adicionarRelacaoDefensiva(String tipo, String relacao) {
+        if (tipo == null || tipo.isBlank() || relacao == null) {
+            return;
+        }
 
         switch (relacao) {
             case "fraqueza":
