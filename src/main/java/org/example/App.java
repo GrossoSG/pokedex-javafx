@@ -17,8 +17,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 1920, 1080);
+        scene = new Scene(loadFXML("primary"), 1280, 720);
         stage.setScene(scene);
+
+        // Abre a janela maximizada mantendo minimizar, diminuir/restaurar e fechar
+        stage.setMaximized(true);
+
         stage.show();
     }
 
