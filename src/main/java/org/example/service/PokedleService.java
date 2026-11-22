@@ -6,6 +6,7 @@ import org.example.model.Pokemon;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class PokedleService {
@@ -38,7 +39,7 @@ public class PokedleService {
         return maxTentativas - tentativas.size();
     }
 
-    // COMPARAR VALORES NUMÉRICOS
+    // COMPARAR VALORES INTEIROS
     private String comparar(int palpite, int resposta) {
 
         if (palpite < resposta) {
@@ -50,6 +51,30 @@ public class PokedleService {
         }
 
         return "IGUAL ✓";
+    }
+
+    // COMPARAR VALORES DOUBLES
+    private String comparar(double palpite, double resposta) {
+
+        if (palpite < resposta) {
+            return "MAIOR ↑";
+        }
+
+        if (palpite > resposta) {
+            return "MENOR ↓";
+        }
+
+        return "IGUAL ✓";
+    }
+
+    // COMPARAR TIPOS
+    private String comparar(String palpite, String resposta){
+        if (Objects.equals(palpite,resposta)){
+            return "IGUAL ✓";
+        }
+        else{
+            return "INCORRETO ×";
+        }
     }
 
 
@@ -93,10 +118,39 @@ public class PokedleService {
             return "PARABÉNS! Você acertou: " + secreto.getNome();
         }
 
+        // Dados do pokemon
+
+        int total = palpite.calcularTotal();
+        String tipo1 = palpite.getTipo1();
+        String tipo2 = palpite.getTipo2();
+        Double altura = palpite.getAltura();
+        Double peso = palpite.getPeso();
+        int estagio_evolutivo = palpite.getEstagioEvolutivo();
+
+        // Tem 2 tipos?
+        String segundoTipo;
+        if(palpite.getTipo2() == null){
+            segundoTipo = "Não tem";
+        }
+        else{
+            segundoTipo = palpite.getTipo2();
+        }
+
         // Gerar dicas
         String dicas =
                 "Pokémon: " + palpite.getNome() + "\n" +
-                "Número: " + comparar(numero, secreto.getNumero()) + "\n" +
+                "Tipo 1: " + palpite.getTipo1() + "\n" +
+                comparar(palpite.getTipo1(), secreto.getTipo1()) + "\n" +
+                "Tipo 2: " + segundoTipo + "\n" +
+                comparar(palpite.getTipo2(), secreto.getTipo2()) + "\n" +
+                "Total: " + palpite.calcularTotal() + " " +
+                comparar(palpite.calcularTotal(), secreto.calcularTotal()) + "\n" +
+                "Altura: " + palpite.getAltura() + " " +
+                comparar(palpite.getAltura(), secreto.getAltura()) + "\n" +
+                "Peso: " + palpite.getPeso() + " " +
+                comparar(palpite.getPeso(), secreto.getPeso()) + "\n" +
+                "Estágio de Evolução: " + palpite.getEstagioEvolutivo() + " " +
+                comparar(palpite.getEstagioEvolutivo(), secreto.getEstagioEvolutivo()) + "\n" +
                 "Tentativas restantes: " + tentativasRestantes();
 
         if (terminou()) {
