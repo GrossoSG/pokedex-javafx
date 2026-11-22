@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,10 +19,19 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("primary"), 1280, 720);
+
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.F11) {
+                stage.setFullScreen(!stage.isFullScreen());
+            }
+        });
+
         stage.setScene(scene);
 
-        // Abre a janela maximizada mantendo minimizar, diminuir/restaurar e fechar
+        //abre a janela já maximizada
         stage.setMaximized(true);
+        //abre a janela já em tela cheia
+        //stage.setFullScreen(true);
 
         stage.show();
     }
