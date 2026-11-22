@@ -9,6 +9,7 @@
 
 
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.PokedexController">
@@ -22,7 +23,26 @@
    </top>
 
    <center>
-      <Label text="Tela da pokedex"/>
-   </center>
+      <VBox spacing="16.0" style="-fx-background-color: #f8fafc;">
+         <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+         </padding>
 
+         <!-- Cabeçalho da seção -->
+         <Label text="Pokédex" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0f172a;"/>
+
+         <!-- Barra de busca (equivalente a input + button no HTML) -->
+         <HBox spacing="10.0">
+            <TextField fx:id="campoBusca" promptText="Buscar por nome ou número do Pokémon..." HBox.hgrow="ALWAYS"/>
+            <Button text="Buscar" onAction="#buscarPokemon"/>
+         </HBox>
+
+         <!-- Área principal do conteúdo -->
+         <VBox fx:id="areaConteudo" spacing="12.0" VBox.vgrow="ALWAYS"
+               style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 16;">
+            <!-- <Label fx:id="labelResultado" text="Digite um Pokémon para começar."/> -->
+         </VBox>
+      </VBox>
+   </center>
 </BorderPane>
+

@@ -19,4 +19,7 @@ public class PokedexController {
     private void switchToPokedex() throws IOException {
         App.setRoot("pokedex");
     }
+
+    @FXML
+    private void buscarPokemon() throws IOException {}
 }
