@@ -18,7 +18,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 1280, 720);
+        scene = new Scene(loadFXML("pokedex"), 1280, 720);
 
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.F11) {
