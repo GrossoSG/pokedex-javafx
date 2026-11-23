@@ -62,6 +62,7 @@ public class PokemonDetalhesController {
     @FXML private FlowPane resistenciasContainer;
     @FXML private FlowPane imunidadesContainer;
 
+
     private List<Pokemon> pokemons = List.of();
     private Map<String, Pokemon> pokemonsPorNome = Map.of();
     private Pokemon pokemonAtual;

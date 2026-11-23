@@ -80,7 +80,6 @@ public class TestePokemon {
             System.out.println("Imunidades: " + charizard.getImunidades());
         }
 
-        */
 
         PokemonDAO dao = new PokemonDAO();
         ComparacaoService comparador = new ComparacaoService();
@@ -129,6 +128,19 @@ public class TestePokemon {
         } else {
             System.out.println("Empate!");
         }
+
+
+        */
+
+        PokemonDAO dao = new PokemonDAO();
+
+        Pokemon p = dao.buscarPorNumero(7);
+
+        System.out.println("Descrição: " + p.getDescricaoSegura());
+
+        System.out.println("Banco utilizado: " +
+                java.nio.file.Path.of("data/pokedex_novo.db")
+                        .toAbsolutePath());
 
     }
 }
