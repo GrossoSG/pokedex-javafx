@@ -1,0 +1,242 @@
+.compare-page {
+    -fx-background-color: #f8fafc;
+}
+
+.compare-navigation {
+    -fx-background-color: #BF0826;
+    -fx-padding: 14;
+}
+
+.navigation-link {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+
+.navigation-link.active {
+    -fx-font-weight: bold;
+    -fx-underline: true;
+}
+
+.compare-scroll,
+.compare-scroll > .viewport {
+    -fx-background-color: #f8fafc;
+}
+
+.compare-content {
+    -fx-padding: 24;
+}
+
+.page-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.page-subtitle,
+.selection-hint {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.selection-bar {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+}
+
+.add-button {
+    -fx-background-color: #BF0826;
+    -fx-background-radius: 8;
+    -fx-padding: 9 16;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.add-button:hover {
+    -fx-background-color: #a90721;
+}
+
+.selection-hint {
+    -fx-padding: 0 0 0 8;
+}
+
+.comparison-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-padding: 14;
+}
+
+.comparison-summary {
+    -fx-padding: 0 2 12 2;
+}
+
+.counter-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.clear-button {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 7;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+}
+
+.comparison-grid {
+    -fx-background-color: white;
+}
+
+.stat-row-label,
+.relation-label {
+    -fx-padding: 10;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+}
+
+.table-header-label {
+    -fx-alignment: center-left;
+    -fx-padding: 10;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+}
+
+.pokemon-option-name {
+    -fx-font-size: 13px;
+    -fx-text-fill: #0f172a;
+}
+
+.added-tag {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 12;
+    -fx-padding: 3 8;
+    -fx-font-size: 10px;
+    -fx-text-fill: #64748b;
+}
+
+.pokemon-column-header {
+    -fx-alignment: center;
+    -fx-min-width: 0;
+    -fx-padding: 4 8 16 8;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
+}
+
+.remove-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+}
+
+.remove-button:hover {
+    -fx-text-fill: #BF0826;
+}
+
+.pokemon-name {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.pokemon-number {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.type-badge {
+    -fx-background-radius: 20;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.favorite-button {
+    -fx-background-color: #fff7db;
+    -fx-background-radius: 8;
+    -fx-padding: 5 10;
+    -fx-text-fill: #475569;
+    -fx-cursor: hand;
+}
+
+.favorite-button:hover {
+    -fx-background-color: #ffefb0;
+}
+
+.section-band {
+    -fx-background-color: #BF0826;
+    -fx-padding: 10 14;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.stat-row-label,
+.relation-label {
+    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+}
+
+.stat-cell,
+.relation-cell {
+    -fx-alignment: center;
+    -fx-padding: 8 12;
+    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+}
+
+.stat-number {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+}
+
+.stat-number-best {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E11D48;
+}
+
+.stat-progress {
+    -fx-pref-height: 9;
+    -fx-min-height: 9;
+    -fx-max-height: 9;
+    -fx-accent: #cbd5e1;
+}
+
+.stat-progress > .track {
+    -fx-background-color: #e9eef5;
+    -fx-background-radius: 8;
+}
+
+.stat-progress > .bar {
+    -fx-background-color: #94a3b8;
+    -fx-background-radius: 8;
+    -fx-background-insets: 0;
+}
+
+.stat-progress-best > .bar {
+    -fx-background-color: #E11D48;
+}
+
+.total-progress > .bar {
+    -fx-background-color: #64748b;
+}
+
+.total-progress.stat-progress-best > .bar {
+    -fx-background-color: #E11D48;
+}
+
+.empty-state {
+    -fx-padding: 30;
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+}
