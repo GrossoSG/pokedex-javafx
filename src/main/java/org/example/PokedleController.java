@@ -131,7 +131,7 @@ public class PokedleController {
 
                 if (jogo.terminou()) {
                     mensagemLabel.setText(
-                            "Fim de jogo! Veja a resposta no histórico."
+                            "Fim de jogo! Era " + jogo.getSecreto().getNome()
                     );
                 } else {
                     mensagemLabel.setText("Continue tentando!");
