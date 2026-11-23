@@ -1,4 +1,4 @@
-package org.example;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -29,6 +28,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.MouseButton;
 import javafx.util.StringConverter;
+import org.example.App;
 import org.example.dao.FavoritoDAO;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;

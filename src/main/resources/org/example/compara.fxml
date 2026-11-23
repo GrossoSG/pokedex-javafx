@@ -13,7 +13,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.ComparaController"
+            fx:controller="org.example.controllers.ComparaController"
             styleClass="compare-page"
             stylesheets="@../../css/compara.css">
     <top>

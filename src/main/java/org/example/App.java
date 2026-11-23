@@ -6,11 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.example.controllers.PokemonDetalhesController;
 import org.example.model.Pokemon;
 import org.example.service.AudioService;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ButtonBase;
-import org.example.service.AudioService;
+
+
 
 import java.io.IOException;
 
@@ -53,7 +55,7 @@ public class App extends Application {
         AudioService.iniciarMusica();
     }
 
-    static void setRoot(String fxml) throws IOException {
+    public static void setRoot(String fxml) throws IOException {
         scene.setRoot(loadFXML(fxml));
     }
 

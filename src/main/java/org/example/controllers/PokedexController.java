@@ -1,4 +1,4 @@
-package org.example;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,6 +25,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
+import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.dao.FavoritoDAO;
 import org.example.model.Pokemon;

@@ -7,6 +7,8 @@ module org.example {
     exports org.example;
     exports org.example.testes;
     opens org.example.testes to javafx.fxml;
+    exports org.example.controllers;
+    opens org.example.controllers to javafx.fxml;
     requires org.xerial.sqlitejdbc;
     requires javafx.media;
 }

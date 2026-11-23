@@ -1,4 +1,4 @@
-package org.example;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 

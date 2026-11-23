@@ -16,7 +16,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.PokemonDetalhesController"
+            fx:controller="org.example.controllers.PokemonDetalhesController"
             styleClass="details-page"
             stylesheets="@../../css/pokemon-detalhes.css">
     <top>

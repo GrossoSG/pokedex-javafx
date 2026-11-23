@@ -1,8 +1,7 @@
-package org.example;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Locale;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
+import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 import org.example.service.PokedleService;
