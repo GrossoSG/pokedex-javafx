@@ -1,0 +1,153 @@
+.pokedle-page {
+    -fx-background-color: #f8fafc;
+}
+
+.navigation-bar {
+    -fx-background-color: #BF0826;
+    -fx-padding: 14;
+}
+
+.navigation-link {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+    -fx-padding: 7 11;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.navigation-link:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-underline: false;
+}
+
+.pokedle-content {
+    -fx-padding: 30;
+}
+
+.game-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172033;
+}
+
+.game-subtitle,
+.game-message {
+    -fx-font-size: 15px;
+    -fx-text-fill: #64748b;
+}
+
+.attempts-label {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172033;
+}
+
+.guess-combo {
+    -fx-cursor: hand;
+}
+
+.try-button,
+.new-game-button {
+    -fx-background-radius: 8;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.try-button {
+    -fx-background-color: #BF0826;
+    -fx-text-fill: white;
+}
+
+.try-button:hover {
+    -fx-background-color: #a90721;
+}
+
+.new-game-button {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #172033;
+}
+
+.new-game-button:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+.history-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172033;
+}
+
+.history-scroll,
+.history-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.history-list {
+    -fx-padding: 10;
+}
+
+.guess-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-padding: 15;
+}
+
+.guess-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172033;
+}
+
+.guess-hints {
+    -fx-font-size: 13px;
+}
+
+.hint-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #475569;
+}
+
+.hint-equal,
+.hint-incorrect,
+.hint-higher,
+.hint-lower,
+.success-badge {
+    -fx-background-radius: 12;
+    -fx-padding: 3 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.hint-equal,
+.success-badge {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #15803d;
+}
+
+.hint-incorrect {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #b91c1c;
+}
+
+.hint-higher {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #b45309;
+}
+
+.hint-lower {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.button:pressed {
+    -fx-opacity: 0.9;
+}
+
+.pixel-art {
+    -fx-smooth: false;
+}

@@ -18,15 +18,15 @@
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.controllers.PokedexController"
+            stylesheets="@../../css/pokedex.css"
             style="-fx-background-color: #f1f5f9;">
     <top>
-        <HBox alignment="CENTER" spacing="28"
-              style="-fx-background-color: #bf0826; -fx-padding: 14;">
-            <Hyperlink text="Pokédex" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+        <HBox alignment="CENTER" spacing="28" styleClass="navigation-bar">
+            <Hyperlink text="Pokédex" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedex"/>
-            <Hyperlink text="Comparar Pokémon" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link"
                        onMouseClicked="#switchToCompara"/>
-            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-underline: false; -fx-font-weight: bold;"
+            <Hyperlink text="Pokedle" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedle"/>
         </HBox>
     </top>
@@ -42,8 +42,7 @@
                     <TextField fx:id="campoBusca" promptText="Buscar por nome ou número..."
                                onAction="#buscarPokemon" HBox.hgrow="ALWAYS"
                                style="-fx-background-radius: 8; -fx-padding: 10;"/>
-                    <Button text="Buscar" onAction="#buscarPokemon"
-                            style="-fx-background-color: #bf0826; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 18;"/>
+                    <Button text="Buscar" onAction="#buscarPokemon" styleClass="primary-button"/>
                 </HBox>
 
                 <HBox spacing="12" alignment="CENTER_LEFT">
@@ -53,17 +52,16 @@
                     <ComboBox fx:id="tipoCombo" prefWidth="150" onAction="#aplicarFiltros"/>
                     <ComboBox fx:id="quantidadeTiposCombo" prefWidth="160" onAction="#aplicarFiltros"/>
                     <Button fx:id="filtroFavoritosButton" text="Favoritos" onAction="#alternarFiltroFavoritos"
-                            style="-fx-background-color: #fff7db; -fx-text-fill: #475569; -fx-background-radius: 8; -fx-padding: 7 12; -fx-cursor: hand;">
+                            styleClass="favorite-filter-button">
                         <graphic>
                             <ImageView fx:id="filtroFavoritosIcone" fitWidth="20" fitHeight="20"
-                                       preserveRatio="true" smooth="false"/>
+                                       preserveRatio="true" smooth="false" styleClass="pixel-art"/>
                         </graphic>
                         <tooltip>
                             <Tooltip text="Mostrar somente Pokémon favoritos"/>
                         </tooltip>
                     </Button>
-                    <Button text="Limpar filtros" onAction="#limparFiltros"
-                            style="-fx-background-color: #e2e8f0; -fx-text-fill: #334155; -fx-background-radius: 8; -fx-padding: 8 14;"/>
+                    <Button text="Limpar filtros" onAction="#limparFiltros" styleClass="secondary-button"/>
                 </HBox>
             </VBox>
 

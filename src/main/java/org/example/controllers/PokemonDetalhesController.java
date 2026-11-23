@@ -15,7 +15,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -25,6 +24,16 @@ import javafx.scene.layout.VBox;
 import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
+import org.example.service.AudioService;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Interpolator;
+import javafx.util.Duration;
+import org.example.util.SpriteImageLoader;
 
 public class PokemonDetalhesController {
 
@@ -67,6 +76,7 @@ public class PokemonDetalhesController {
     private List<Pokemon> pokemons = List.of();
     private Map<String, Pokemon> pokemonsPorNome = Map.of();
     private Pokemon pokemonAtual;
+    private final List<Timeline> animacoesEstatisticas = new ArrayList<>();
 
     @FXML
     private void initialize() {
@@ -165,9 +175,23 @@ public class PokemonDetalhesController {
     }
 
     private void atualizarSprite(Pokemon pokemon) {
-        var spriteUrl = getClass().getResource("/sprites/" + pokemon.getNumero() + ".png");
-        spriteImage.setImage(spriteUrl == null ? null : new Image(spriteUrl.toExternalForm(), true));
+        spriteImage.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 350));
         spriteImage.setSmooth(false);
+        if (!spriteImage.getStyleClass().contains("pixel-art")) {
+            spriteImage.getStyleClass().add("pixel-art");
+        }
+        spriteImage.setOpacity(0);
+        spriteImage.setScaleX(0.94);
+        spriteImage.setScaleY(0.94);
+        ParallelTransition entrada = new ParallelTransition(
+                new FadeTransition(Duration.millis(180), spriteImage),
+                new ScaleTransition(Duration.millis(180), spriteImage)
+        );
+        ((FadeTransition) entrada.getChildren().get(0)).setToValue(1);
+        ScaleTransition escala = (ScaleTransition) entrada.getChildren().get(1);
+        escala.setToX(1);
+        escala.setToY(1);
+        entrada.play();
     }
 
     private void atualizarHabilidades() {
@@ -225,6 +249,8 @@ public class PokemonDetalhesController {
     }
 
     private void atualizarEstatisticas() {
+        animacoesEstatisticas.forEach(Timeline::stop);
+        animacoesEstatisticas.clear();
         statsChartContainer.getChildren().clear();
         adicionarEstatistica("HP", pokemonAtual.getHp());
         adicionarEstatistica("Ataque", pokemonAtual.getAtaque());
@@ -248,14 +274,14 @@ public class PokemonDetalhesController {
         Region barra = new Region();
         barra.getStyleClass().add("stat-bar");
         double altura = Math.max(3, Math.min(120, Math.max(0, valor) / 255.0 * 120));
-        barra.setMinHeight(altura);
-        barra.setPrefHeight(altura);
-        barra.setMaxHeight(altura);
+        barra.setMinHeight(0);
+        barra.setPrefHeight(0);
+        barra.setMaxHeight(0);
 
         StackPane trilho = new StackPane(barra);
         trilho.getStyleClass().add("stat-track");
         trilho.setMinWidth(0);
-        StackPane.setAlignment(barra, javafx.geometry.Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(barra, Pos.BOTTOM_CENTER);
 
         Label nomeLabel = new Label(nome);
         nomeLabel.getStyleClass().add("stat-name");
@@ -266,6 +292,16 @@ public class PokemonDetalhesController {
 
         coluna.getChildren().addAll(valorLabel, trilho, nomeLabel);
         statsChartContainer.getChildren().add(coluna);
+        Timeline animacao = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(barra.prefHeightProperty(), 0),
+                        new KeyValue(barra.maxHeightProperty(), 0)),
+                new KeyFrame(Duration.millis(250),
+                        new KeyValue(barra.prefHeightProperty(), altura, Interpolator.EASE_OUT),
+                        new KeyValue(barra.maxHeightProperty(), altura, Interpolator.EASE_OUT))
+        );
+        animacoesEstatisticas.add(animacao);
+        animacao.play();
     }
 
     private void atualizarEvolucoes() {
@@ -310,10 +346,9 @@ public class PokemonDetalhesController {
         sprite.setFitWidth(64);
         sprite.setFitHeight(64);
         sprite.setPreserveRatio(true);
-        var spriteUrl = getClass().getResource("/sprites/" + pokemon.getNumero() + ".png");
-        if (spriteUrl != null) {
-            sprite.setImage(new Image(spriteUrl.toExternalForm(), true));
-        }
+        sprite.setSmooth(false);
+        sprite.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 64));
+        sprite.getStyleClass().add("pixel-art");
 
         Label nome = new Label(capitalizar(pokemon.getNome()));
         nome.getStyleClass().add("evolution-name");
@@ -326,11 +361,24 @@ public class PokemonDetalhesController {
         cartao.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         cartao.getStyleClass().add("evolution-entry");
         cartao.setCursor(Cursor.HAND);
+        cartao.setOnMouseEntered(event -> animarCardEvolucao(cartao, -3));
+        cartao.setOnMouseExited(event -> animarCardEvolucao(cartao, 0));
         cartao.setOnMouseClicked(event -> {
+            AudioService.tocarClique();
             setPokemon(pokemon);
             event.consume();
         });
         return cartao;
+    }
+
+    private void animarCardEvolucao(HBox cartao, double translateY) {
+        javafx.animation.TranslateTransition transicao =
+                new javafx.animation.TranslateTransition(Duration.millis(160), cartao);
+        transicao.setToY(translateY);
+        transicao.play();
+        cartao.setEffect(translateY < 0
+                ? new javafx.scene.effect.DropShadow(10, 0, 3, javafx.scene.paint.Color.rgb(191, 8, 38, 0.16))
+                : null);
     }
 
     private Label criarBadge(String tipo) {

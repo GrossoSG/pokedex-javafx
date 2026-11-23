@@ -54,7 +54,7 @@
                         <VBox spacing="16" GridPane.columnIndex="0" styleClass="detail-column">
                             <VBox alignment="CENTER" spacing="8" styleClass="sprite-card">
                                 <ImageView fx:id="spriteImage" fitWidth="350" fitHeight="350"
-                                           preserveRatio="true" smooth="false"/>
+                                           preserveRatio="true" smooth="false" styleClass="pixel-art"/>
                             </VBox>
 
                             <VBox spacing="12" styleClass="white-card stats-card">

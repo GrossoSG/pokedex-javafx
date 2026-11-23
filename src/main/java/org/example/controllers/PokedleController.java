@@ -14,17 +14,21 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 import org.example.service.PokedleService;
 import org.example.service.AudioService;
+import org.example.util.SpriteImageLoader;
 
 public class PokedleController {
 
@@ -204,15 +208,8 @@ public class PokedleController {
                 sprite.setPreserveRatio(true);
                 sprite.setSmooth(false);
 
-                var url = getClass().getResource(
-                        "/sprites/" + pokemon.getNumero() + ".png"
-                );
-
-                if (url != null) {
-                    sprite.setImage(
-                            new Image(url.toExternalForm())
-                    );
-                }
+                sprite.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 40));
+                sprite.getStyleClass().add("pixel-art");
 
                 // Nome e número
                 Label nome = new Label(formatarPokemon(pokemon));
@@ -428,32 +425,13 @@ public class PokedleController {
         HBox cartao = new HBox(15);
         cartao.setAlignment(Pos.CENTER_LEFT);
         cartao.setMaxWidth(Double.MAX_VALUE);
-
-        cartao.setStyle(
-                "-fx-background-color: white;" +
-                        "-fx-background-radius: 12;" +
-                        "-fx-border-color: #e2e8f0;" +
-                        "-fx-border-radius: 12;" +
-                        "-fx-padding: 15;"
-        );
+        cartao.getStyleClass().add("guess-card");
 
         Label titulo = new Label(
-                "Tentativa " + tentativasFeitas + " - " + nome
+                "Tentativa " + tentativasFeitas + " - " + primeiraMaiuscula(nome)
         );
-
-        titulo.setStyle(
-                "-fx-font-size: 16px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #172033;"
-        );
-
-        Label dicas = new Label(resultado);
-        dicas.setWrapText(true);
-
-        dicas.setStyle(
-                "-fx-font-size: 14px;" +
-                        "-fx-text-fill: #475569;"
-        );
+        titulo.getStyleClass().add("guess-title");
+        VBox dicas = criarDicas(resultado);
 
         VBox textos = new VBox(8, titulo, dicas);
         textos.setMaxWidth(Double.MAX_VALUE);
@@ -469,24 +447,14 @@ public class PokedleController {
 
                 if (pokemon.getNome().equalsIgnoreCase(nome)) {
 
-                    String caminho = "/sprites/" +
-                            pokemon.getNumero() + ".png";
-
-                    var url = getClass().getResource(caminho);
-
-                    if (url != null) {
-
-                        ImageView sprite = new ImageView(
-                                new Image(url.toExternalForm())
-                        );
-
-                        sprite.setFitWidth(90);
-                        sprite.setFitHeight(90);
-                        sprite.setPreserveRatio(true);
-                        sprite.setSmooth(false);
-
-                        cartao.getChildren().add(sprite);
-                    }
+                    ImageView sprite = new ImageView(
+                            SpriteImageLoader.loadPokemon(pokemon.getNumero(), 90));
+                    sprite.setFitWidth(90);
+                    sprite.setFitHeight(90);
+                    sprite.setPreserveRatio(true);
+                    sprite.setSmooth(false);
+                    sprite.getStyleClass().add("pixel-art");
+                    cartao.getChildren().add(sprite);
 
                     break;
                 }
@@ -499,6 +467,82 @@ public class PokedleController {
         }
 
         historicoTentativas.getChildren().add(0, cartao);
+        cartao.setOpacity(0);
+        cartao.setTranslateY(8);
+        ParallelTransition entrada = new ParallelTransition(
+                new FadeTransition(Duration.millis(200), cartao),
+                new TranslateTransition(Duration.millis(200), cartao)
+        );
+        ((FadeTransition) entrada.getChildren().get(0)).setToValue(1);
+        ((TranslateTransition) entrada.getChildren().get(1)).setToY(0);
+        entrada.play();
+    }
+
+    private VBox criarDicas(String resultado) {
+        VBox dicas = new VBox(5);
+        dicas.getStyleClass().add("guess-hints");
+        for (String linha : resultado.split("\\R")) {
+            String texto = linha.trim();
+            if (texto.isEmpty()) {
+                continue;
+            }
+            if (texto.startsWith("PARABÉNS!")) {
+                String nomeAcertado = texto.substring(texto.lastIndexOf(' ') + 1);
+                Label sucesso = new Label("Parabéns! Você acertou: "
+                        + primeiraMaiuscula(nomeAcertado));
+                sucesso.getStyleClass().add("success-badge");
+                dicas.getChildren().add(sucesso);
+                continue;
+            }
+
+            int separador = texto.indexOf(':');
+            if (separador < 0) {
+                Label informacao = new Label(texto);
+                informacao.getStyleClass().add("hint-label");
+                dicas.getChildren().add(informacao);
+                continue;
+            }
+            String rotulo = texto.substring(0, separador + 1);
+            String valor = texto.substring(separador + 1).trim();
+            String indicador = encontrarIndicador(valor);
+            String detalhe = indicador.isEmpty()
+                    ? valor : valor.substring(0, valor.lastIndexOf(indicador)).trim();
+            if ("Pokémon:".equals(rotulo)) {
+                detalhe = primeiraMaiuscula(detalhe);
+            }
+
+            HBox linhaDica = new HBox(7);
+            linhaDica.setAlignment(Pos.CENTER_LEFT);
+            Label informacao = new Label(rotulo + " " + detalhe);
+            informacao.getStyleClass().add("hint-label");
+            linhaDica.getChildren().add(informacao);
+            if (!indicador.isEmpty()) {
+                Label estado = new Label(indicador);
+                estado.getStyleClass().add("hint-" + classeIndicador(indicador));
+                linhaDica.getChildren().add(estado);
+            }
+            dicas.getChildren().add(linhaDica);
+        }
+        return dicas;
+    }
+
+    private String encontrarIndicador(String texto) {
+        for (String indicador : new String[]{"IGUAL ✓", "INCORRETO ×", "MAIOR ↑", "MENOR ↓"}) {
+            if (texto.endsWith(indicador)) {
+                return indicador;
+            }
+        }
+        return "";
+    }
+
+    private String classeIndicador(String indicador) {
+        if (indicador.startsWith("IGUAL")) {
+            return "equal";
+        }
+        if (indicador.startsWith("INCORRETO")) {
+            return "incorrect";
+        }
+        return indicador.startsWith("MAIOR") ? "higher" : "lower";
     }
 
 

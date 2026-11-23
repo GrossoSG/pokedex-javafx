@@ -11,6 +11,10 @@ import org.example.model.Pokemon;
 import org.example.service.AudioService;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.animation.ScaleTransition;
+import javafx.util.Duration;
 
 
 
@@ -36,6 +40,8 @@ public class App extends Application {
             }
 
         });
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> animarPressionado(event.getTarget(), 0.97));
+        scene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> animarPressionado(event.getTarget(), 1));
 
 
         scene.setOnKeyPressed(event -> {
@@ -53,6 +59,23 @@ public class App extends Application {
 
         stage.show();
         AudioService.iniciarMusica();
+    }
+
+    private void animarPressionado(Object alvo, double escala) {
+        if (!(alvo instanceof Node node)) {
+            return;
+        }
+        Node clicavel = node;
+        while (clicavel != null && !(clicavel instanceof ButtonBase)) {
+            Parent parent = clicavel.getParent();
+            clicavel = parent;
+        }
+        if (clicavel != null) {
+            ScaleTransition transicao = new ScaleTransition(Duration.millis(120), clicavel);
+            transicao.setToX(escala);
+            transicao.setToY(escala);
+            transicao.play();
+        }
     }
 
     public static void setRoot(String fxml) throws IOException {

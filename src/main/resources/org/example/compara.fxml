@@ -17,13 +17,12 @@
             styleClass="compare-page"
             stylesheets="@../../css/compara.css">
     <top>
-        <HBox alignment="CENTER" spacing="28"
-              style="-fx-background-color: #bf0826; -fx-padding: 14;">
-            <Hyperlink text="Pokédex" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+        <HBox alignment="CENTER" spacing="28" styleClass="compare-navigation">
+            <Hyperlink text="Pokédex" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedex"/>
-            <Hyperlink text="Comparar Pokémon" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link"
                        onMouseClicked="#switchToCompara"/>
-            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-underline: false; -fx-font-weight: bold;"
+            <Hyperlink text="Pokedle" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedle"/>
         </HBox>
     </top>
@@ -40,7 +39,7 @@
 
                     <HBox alignment="CENTER_LEFT" spacing="10" styleClass="selection-bar">
                         <ComboBox fx:id="pokemonCombo" editable="true" prefWidth="360"
-                                  promptText="Buscar por nome ou número (#001–#151)"/>
+                                  promptText="Buscar por nome ou número..."/>
                         <Button fx:id="adicionarButton" text="+ Adicionar" onAction="#adicionarPokemon"
                                 styleClass="add-button"/>
                         <Label fx:id="orientacaoLabel" wrapText="true" styleClass="selection-hint"/>

@@ -10,8 +10,15 @@
 .navigation-link {
     -fx-text-fill: white;
     -fx-font-size: 13px;
+    -fx-font-weight: bold;
     -fx-underline: false;
     -fx-cursor: hand;
+    -fx-padding: 7 11;
+    -fx-background-radius: 6;
+}
+
+.navigation-link:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
 }
 
 .details-content {
@@ -31,6 +38,13 @@
 .neighbor-button:hover,
 .evolution-entry:hover {
     -fx-background-color: #f1f5f9;
+    -fx-border-color: #fca5a5;
+    -fx-effect: dropshadow(gaussian, rgba(191, 8, 38, 0.14), 10, 0, 0, 3);
+}
+
+.neighbor-button:pressed,
+.back-button:pressed {
+    -fx-opacity: 0.9;
 }
 
 .neighbor-button:disabled {
@@ -217,4 +231,8 @@
 
 .back-button:hover {
     -fx-background-color: #a90721;
+}
+
+.pixel-art {
+    -fx-smooth: false;
 }

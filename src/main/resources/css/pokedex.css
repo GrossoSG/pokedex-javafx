@@ -1,0 +1,90 @@
+.navigation-bar {
+    -fx-background-color: #BF0826;
+    -fx-padding: 14;
+}
+
+.navigation-link {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+    -fx-padding: 7 11;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.navigation-link:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
+    -fx-underline: false;
+
+}
+
+.primary-button,
+.secondary-button,
+.favorite-filter-button {
+    -fx-background-radius: 8;
+    -fx-padding: 9 14;
+    -fx-cursor: hand;
+}
+
+.primary-button {
+    -fx-background-color: #BF0826;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.primary-button:hover {
+    -fx-background-color: #a90721;
+}
+
+.secondary-button {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #334155;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #cbd5e1;
+}
+
+.favorite-filter-button {
+    -fx-background-color: #fff7db;
+    -fx-text-fill: #475569;
+}
+
+.favorite-filter-button:hover,
+.favorite-card-button:hover {
+    -fx-background-color: #ffefb0;
+}
+
+.pokemon-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-padding: 12;
+    -fx-cursor: hand;
+}
+
+.pokemon-card-header {
+    -fx-min-height: 24;
+}
+
+.favorite-card-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 7;
+    -fx-padding: 3;
+    -fx-cursor: hand;
+}
+
+.combo-box,
+.text-field {
+    -fx-cursor: hand;
+}
+
+.button:pressed {
+    -fx-opacity: 0.9;
+}
+
+.pixel-art {
+    -fx-smooth: false;
+}

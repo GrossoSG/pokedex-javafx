@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TextField;
 import javafx.scene.Cursor;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -25,12 +24,19 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import org.example.App;
 import org.example.dao.PokemonDAO;
 import org.example.dao.FavoritoDAO;
 import org.example.model.Pokemon;
 import org.example.service.AudioService;
 import javafx.scene.input.MouseEvent;
+import org.example.util.SpriteImageLoader;
 
 public class PokedexController {
 
@@ -218,8 +224,9 @@ public class PokedexController {
         cartao.setMinWidth(150);
         cartao.setMaxWidth(Double.MAX_VALUE);
         cartao.setCursor(Cursor.HAND);
-        cartao.setStyle("-fx-background-color: white; -fx-background-radius: 12; "
-                + "-fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-padding: 12;");
+        cartao.getStyleClass().add("pokemon-card");
+        cartao.setOnMouseEntered(event -> animarCard(cartao, -3, pokemon));
+        cartao.setOnMouseExited(event -> animarCard(cartao, 0, pokemon));
         cartao.setOnMouseClicked(event -> {
             AudioService.tocarClique();
             try {
@@ -232,6 +239,7 @@ public class PokedexController {
         Label numero = new Label(String.format("#%03d", pokemon.getNumero()));
         numero.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;");
         StackPane cabecalho = new StackPane(numero);
+        cabecalho.getStyleClass().add("pokemon-card-header");
         cabecalho.setMaxWidth(Double.MAX_VALUE);
         StackPane.setAlignment(numero, Pos.CENTER);
 
@@ -241,10 +249,15 @@ public class PokedexController {
         favoritoIcone.setFitHeight(20);
         favoritoIcone.setPreserveRatio(true);
         favoritoIcone.setSmooth(false);
+        favoritoIcone.getStyleClass().add("pixel-art");
         favoritoButton.setGraphic(favoritoIcone);
         favoritoButton.setFocusTraversable(false);
-        favoritoButton.setStyle("-fx-background-color: transparent; -fx-padding: 2; -fx-cursor: hand;");
-        favoritoButton.setOnMouseClicked(event -> alternarFavorito(pokemon, favoritoIcone, event));
+        favoritoButton.getStyleClass().add("favorite-card-button");
+        favoritoButton.setOnMouseEntered(event -> animarEscala(favoritoButton, 1.15));
+        favoritoButton.setOnMouseExited(event -> animarEscala(favoritoButton, 1));
+        favoritoButton.setOnMouseClicked(event -> {
+            alternarFavorito(pokemon, favoritoIcone, favoritoButton, event);
+        });
         StackPane.setAlignment(favoritoButton, Pos.TOP_RIGHT);
         cabecalho.getChildren().add(favoritoButton);
 
@@ -252,10 +265,9 @@ public class PokedexController {
         sprite.setFitWidth(112);
         sprite.setFitHeight(112);
         sprite.setPreserveRatio(true);
-        var spriteUrl = getClass().getResource("/sprites/" + pokemon.getNumero() + ".png");
-        if (spriteUrl != null) {
-            sprite.setImage(new Image(spriteUrl.toExternalForm(), true));
-        }
+        sprite.setSmooth(false);
+        sprite.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 112));
+        sprite.getStyleClass().add("pixel-art");
 
         Label nome = new Label(capitalizar(pokemon.getNome()));
         nome.setStyle("-fx-text-fill: #172033; -fx-font-size: 16px; -fx-font-weight: bold;");
@@ -273,7 +285,35 @@ public class PokedexController {
         return cartao;
     }
 
-    private void alternarFavorito(Pokemon pokemon, ImageView icone, MouseEvent event) {
+    private void animarCard(VBox cartao, double translateY, Pokemon pokemon) {
+        TranslateTransition transicao = new TranslateTransition(Duration.millis(160), cartao);
+        transicao.setToY(translateY);
+        transicao.play();
+        if (translateY < 0) {
+            String cor = getCorHexPorTipo(pokemon.getTipo1());
+            cartao.setStyle("-fx-border-color: " + cor + ";");
+            cartao.setEffect(new DropShadow(12, 0, 4, Color.web(cor, 0.45)));
+        } else {
+            cartao.setStyle("-fx-border-color: #e2e8f0;");
+            cartao.setEffect(null);
+        }
+    }
+
+    private String getCorHexPorTipo(String tipo) {
+        if (tipo == null || tipo.isBlank()) {
+            return "#e2e8f0";
+        }
+        return CORES_TIPO.getOrDefault(tipo.toLowerCase(Locale.ROOT), "#e2e8f0");
+    }
+
+    private void animarEscala(javafx.scene.Node node, double escala) {
+        ScaleTransition transicao = new ScaleTransition(Duration.millis(140), node);
+        transicao.setToX(escala);
+        transicao.setToY(escala);
+        transicao.play();
+    }
+
+    private void alternarFavorito(Pokemon pokemon, ImageView icone, Button botao, MouseEvent event) {
         event.consume();
         int numero = pokemon.getNumero();
         boolean eraFavorito = favoritos.contains(numero);
@@ -286,6 +326,17 @@ public class PokedexController {
                 favoritos.add(numero);
             }
             icone.setImage(carregarSprite(!eraFavorito));
+            javafx.animation.SequentialTransition pulso = new javafx.animation.SequentialTransition(
+                    new ScaleTransition(Duration.millis(80), botao),
+                    new ScaleTransition(Duration.millis(110), botao)
+            );
+            ScaleTransition crescer = (ScaleTransition) pulso.getChildren().get(0);
+            crescer.setToX(1.25);
+            crescer.setToY(1.25);
+            ScaleTransition voltar = (ScaleTransition) pulso.getChildren().get(1);
+            voltar.setToX(1.15);
+            voltar.setToY(1.15);
+            pulso.play();
             if (filtrarFavoritos) {
                 atualizarGrade();
             }
@@ -296,11 +347,7 @@ public class PokedexController {
 
     private Image carregarSprite(boolean favorito) {
         String caminho = favorito ? SPRITE_FAVORITO : SPRITE_NAO_FAVORITO;
-        var url = getClass().getResource(caminho);
-        if (url == null) {
-            throw new IllegalStateException("Sprite de favorito não encontrado: " + caminho);
-        }
-        return new Image(url.toExternalForm());
+        return SpriteImageLoader.loadResource(caminho, 20, 20);
     }
 
     private Label criarEtiquetaTipo(String tipo) {

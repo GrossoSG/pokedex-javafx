@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
@@ -27,7 +26,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.MouseButton;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
+import org.example.util.SpriteImageLoader;
 import org.example.App;
 import org.example.dao.FavoritoDAO;
 import org.example.dao.PokemonDAO;
@@ -276,10 +281,8 @@ public class ComparaController {
         sprite.setFitHeight(96);
         sprite.setPreserveRatio(true);
         sprite.setSmooth(false);
-        var spriteUrl = getClass().getResource("/sprites/" + pokemon.getNumero() + ".png");
-        if (spriteUrl != null) {
-            sprite.setImage(new Image(spriteUrl.toExternalForm()));
-        }
+        sprite.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 96));
+        sprite.getStyleClass().add("pixel-art");
 
         Label nome = new Label(capitalizar(pokemon.getNome()));
         nome.getStyleClass().add("pokemon-name");
@@ -295,6 +298,8 @@ public class ComparaController {
         favorito.getStyleClass().add("favorite-button");
         favorito.setGraphic(criarIconeFavorito(pokemon));
         atualizarTooltipFavorito(favorito, pokemon);
+        favorito.setOnMouseEntered(event -> animarEscala(favorito, 1.08));
+        favorito.setOnMouseExited(event -> animarEscala(favorito, 1));
         favorito.setOnAction(event -> alternarFavorito(pokemon, favorito));
 
         cabecalho.getChildren().addAll(topo, sprite, nome, numero, tipos, favorito);
@@ -326,7 +331,8 @@ public class ComparaController {
         Label numero = new Label(String.valueOf(valor));
         boolean destacado = selecionados.size() >= 2 && valor == maior;
         numero.getStyleClass().add(destacado ? "stat-number-best" : "stat-number");
-        ProgressBar barra = new ProgressBar(total ? Math.min(1, valor / 765.0) : Math.min(1, valor / 255.0));
+        double progressoFinal = total ? Math.min(1, valor / 765.0) : Math.min(1, valor / 255.0);
+        ProgressBar barra = new ProgressBar(0);
         barra.setMaxWidth(Double.MAX_VALUE);
         barra.getStyleClass().add("stat-progress");
         if (total) {
@@ -336,6 +342,10 @@ public class ComparaController {
             barra.getStyleClass().add("stat-progress-best");
         }
         celula.getChildren().addAll(numero, barra);
+        new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(barra.progressProperty(), 0)),
+                new KeyFrame(Duration.millis(220), new KeyValue(barra.progressProperty(), progressoFinal))
+        ).play();
         return celula;
     }
 
@@ -381,22 +391,38 @@ public class ComparaController {
             }
             botao.setGraphic(criarIconeFavorito(pokemon));
             atualizarTooltipFavorito(botao, pokemon);
+            javafx.animation.SequentialTransition pulso = new javafx.animation.SequentialTransition(
+                    new ScaleTransition(Duration.millis(80), botao),
+                    new ScaleTransition(Duration.millis(110), botao)
+            );
+            ScaleTransition crescer = (ScaleTransition) pulso.getChildren().get(0);
+            crescer.setToX(1.16);
+            crescer.setToY(1.16);
+            ScaleTransition voltar = (ScaleTransition) pulso.getChildren().get(1);
+            voltar.setToX(1.08);
+            voltar.setToY(1.08);
+            pulso.play();
         } catch (SQLException e) {
             mostrarErro("Erro ao atualizar favoritos", e);
         }
     }
 
+    private void animarEscala(Button botao, double escala) {
+        ScaleTransition transicao = new ScaleTransition(Duration.millis(140), botao);
+        transicao.setToX(escala);
+        transicao.setToY(escala);
+        transicao.play();
+    }
+
     private ImageView criarIconeFavorito(Pokemon pokemon) {
         boolean favorito = numerosFavoritos.contains(pokemon.getNumero());
-        var url = getClass().getResource(favorito ? STAR_ON : STAR_OFF);
-        if (url == null) {
-            throw new IllegalStateException("Ícone de favorito não encontrado.");
-        }
-        ImageView icone = new ImageView(new Image(url.toExternalForm()));
+        ImageView icone = new ImageView(SpriteImageLoader.loadResource(
+                favorito ? STAR_ON : STAR_OFF, 20, 20));
         icone.setFitWidth(20);
         icone.setFitHeight(20);
         icone.setPreserveRatio(true);
         icone.setSmooth(false);
+        icone.getStyleClass().add("pixel-art");
         return icone;
     }
 
@@ -422,10 +448,8 @@ public class ComparaController {
                 sprite.setFitHeight(40);
                 sprite.setPreserveRatio(true);
                 sprite.setSmooth(false);
-                var spriteUrl = getClass().getResource("/sprites/" + pokemon.getNumero() + ".png");
-                if (spriteUrl != null) {
-                    sprite.setImage(new Image(spriteUrl.toExternalForm()));
-                }
+                sprite.setImage(SpriteImageLoader.loadPokemon(pokemon.getNumero(), 40));
+                sprite.getStyleClass().add("pixel-art");
 
                 Label nome = new Label(formatarPokemon(pokemon));
                 nome.getStyleClass().add("pokemon-option-name");

@@ -11,12 +11,14 @@
     -fx-text-fill: white;
     -fx-font-size: 13px;
     -fx-underline: false;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
+    -fx-padding: 7 11;
+    -fx-background-radius: 6;
 }
 
-.navigation-link.active {
-    -fx-font-weight: bold;
-    -fx-underline: true;
+.navigation-link:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.16);
 }
 
 .compare-scroll,
@@ -61,8 +63,19 @@
     -fx-background-color: #a90721;
 }
 
+.add-button:pressed,
+.clear-button:pressed,
+.favorite-button:pressed {
+    -fx-opacity: 0.9;
+}
+
 .selection-hint {
     -fx-padding: 0 0 0 8;
+}
+
+.combo-box,
+.text-field {
+    -fx-cursor: hand;
 }
 
 .comparison-card {
@@ -105,11 +118,11 @@
 
 .table-header-label {
     -fx-alignment: center-left;
-    -fx-padding: 10;
+    -fx-padding: 10 10 10 12;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
-    -fx-border-color: transparent #e2e8f0 #e2e8f0 transparent;
+    -fx-text-fill: #64748b;
+    -fx-border-color: transparent transparent #e2e8f0 transparent;
 }
 
 .pokemon-option-name {
@@ -140,6 +153,8 @@
 }
 
 .remove-button:hover {
+    -fx-background-color: #fee2e2;
+    -fx-background-radius: 7;
     -fx-text-fill: #BF0826;
 }
 
@@ -172,6 +187,7 @@
 
 .favorite-button:hover {
     -fx-background-color: #ffefb0;
+    -fx-effect: dropshadow(gaussian, rgba(180, 130, 0, 0.16), 8, 0, 0, 2);
 }
 
 .section-band {
@@ -239,4 +255,8 @@
     -fx-padding: 30;
     -fx-text-fill: #94a3b8;
     -fx-font-size: 14px;
+}
+
+.pixel-art {
+    -fx-smooth: false;
 }

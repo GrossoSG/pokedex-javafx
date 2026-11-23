@@ -13,16 +13,17 @@
 <?import javafx.scene.control.ScrollPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.controllers.PokedleController">
+            fx:controller="org.example.controllers.PokedleController"
+styleClass="pokedle-page"
+stylesheets="@../../css/pokedle.css">
 
     <top>
-        <HBox alignment="CENTER" spacing="28"
-              style="-fx-background-color: #bf0826; -fx-padding: 14;">
-            <Hyperlink text="Pokédex" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+        <HBox alignment="CENTER" spacing="28" styleClass="navigation-bar">
+            <Hyperlink text="Pokédex" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedex"/>
-            <Hyperlink text="Comparar Pokémon" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link"
                        onMouseClicked="#switchToCompara"/>
-            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-underline: false; -fx-font-weight: bold;"
+            <Hyperlink text="Pokedle" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedle"/>
         </HBox>
     </top>
@@ -32,23 +33,15 @@
         <VBox alignment="TOP_CENTER"
               spacing="20"
               maxWidth="900"
-              style="-fx-padding: 30;">
+              styleClass="pokedle-content">
 
             <!-- TÍTULO -->
-            <Label text="POKEDLE"
-                   style="-fx-font-size: 32px;
-                          -fx-font-weight: bold;
-                          -fx-text-fill: #172033;"/>
+            <Label text="POKEDLE" styleClass="game-title"/>
 
-            <Label text="Adivinhe o Pokémon secreto!"
-                   style="-fx-font-size: 16px;
-                          -fx-text-fill: #64748b;"/>
+            <Label text="Adivinhe o Pokémon secreto!" styleClass="game-subtitle"/>
 
             <!-- TENTATIVAS -->
-            <Label fx:id="tentativasLabel"
-                   text="Tentativas restantes: 8"
-                   style="-fx-font-size: 17px;
-                          -fx-font-weight: bold;"/>
+            <Label fx:id="tentativasLabel" text="Tentativas restantes: 8" styleClass="attempts-label"/>
 
             <!-- CAMPO DE PALPITE -->
             <HBox alignment="CENTER"
@@ -60,45 +53,36 @@
                           promptText="Digite o nome de um Pokémon..."
                           prefHeight="42"
                           maxWidth="Infinity"
+                          styleClass="guess-combo"
                           HBox.hgrow="ALWAYS"/>
 
                 <Button fx:id="botaoTentar"
                         text="Tentar"
                         onAction="#enviarPalpite"
                         prefHeight="42"
-                        style="-fx-background-color: #BF0826;
-                               -fx-text-fill: white;
-                               -fx-font-weight: bold;
-                               -fx-cursor: hand;"/>
+                        styleClass="try-button"/>
 
             </HBox>
 
             <!-- MENSAGENS -->
-            <Label fx:id="mensagemLabel"
-                   text="Digite seu primeiro palpite!"
-                   wrapText="true"
-                   style="-fx-font-size: 15px;
-                          -fx-text-fill: #475569;"/>
+            <Label fx:id="mensagemLabel" text="Digite seu primeiro palpite!"
+                   wrapText="true" styleClass="game-message"/>
 
             <!-- NOVA PARTIDA -->
             <Button text="Nova Partida"
                     onAction="#novoJogo"
-                    style="-fx-background-color: #e2e8f0;
-                           -fx-text-fill: #172033;
-                           -fx-cursor: hand;"/>
+                    styleClass="new-game-button"/>
 
             <!-- HISTÓRICO -->
-            <Label text="Histórico de tentativas"
-                   style="-fx-font-size: 20px;
-                          -fx-font-weight: bold;"/>
+            <Label text="Histórico de tentativas" styleClass="history-title"/>
 
             <ScrollPane fitToWidth="true"
                         VBox.vgrow="ALWAYS"
-                        style="-fx-background-color: transparent;">
+                    styleClass="history-scroll">
 
                 <VBox fx:id="historicoTentativas"
                       spacing="12"
-                      style="-fx-padding: 10;"/>
+                  styleClass="history-list"/>
 
             </ScrollPane>
 
