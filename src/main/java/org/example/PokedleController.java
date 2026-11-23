@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 import org.example.service.PokedleService;
+import org.example.service.AudioService;
 
 public class PokedleController {
 
@@ -75,6 +76,7 @@ public class PokedleController {
 
 
     // ENVIAR PALPITE
+
     @FXML
     private void enviarPalpite() {
 
@@ -82,48 +84,67 @@ public class PokedleController {
             return;
         }
 
-        String nome = campoPalpite.getText().trim();
+        String nome = campoPalpite.getText();
 
-        if (nome.isEmpty()) {
+        // CAMPO VAZIO
+        if (nome == null || nome.isBlank()) {
             mensagemLabel.setText("Digite um Pokémon!");
+            AudioService.tocarErro();
             return;
         }
 
         try {
             int tentativasAntes = jogo.tentativasRestantes();
 
-            // Verifica o palpite pelo PokedleService
-            String resultado = jogo.tentar(nome);
+            // Verificar palpite
+            String resultado = jogo.tentar(nome.trim());
 
-            // Se não consumiu uma tentativa, o palpite foi inválido
+            // POKÉMON INVÁLIDO OU REPETIDO
             if (tentativasAntes == jogo.tentativasRestantes()) {
+
                 mensagemLabel.setText(resultado);
+                AudioService.tocarErro();
                 return;
             }
 
             tentativasFeitas++;
 
             // Adicionar ao histórico
-            adicionarAoHistorico(nome, resultado);
+            adicionarAoHistorico(nome.trim(), resultado);
 
-            // Atualizar a interface
             atualizarTentativas();
             campoPalpite.clear();
 
-            // Verificar fim do jogo
+            // ACERTOU
+            if (resultado.startsWith("PARABÉNS!")) {
+
+                AudioService.tocarAcerto();
+
+                mensagemLabel.setText(
+                        "Parabéns! Você acertou!"
+                );
+
+            } else {
+
+                // PALPITE ERRADO
+                AudioService.tocarErro();
+
+                if (jogo.terminou()) {
+                    mensagemLabel.setText(
+                            "Fim de jogo! Veja a resposta no histórico."
+                    );
+                } else {
+                    mensagemLabel.setText("Continue tentando!");
+                }
+            }
+
+            // FINALIZAR PARTIDA
             if (jogo.terminou()) {
 
                 campoPalpite.setDisable(true);
                 botaoTentar.setDisable(true);
 
-                if (resultado.startsWith("PARABÉNS!")) {
-                    mensagemLabel.setText("Parabéns! Você acertou!");
-                } else {
-                    mensagemLabel.setText("Fim de jogo! Era " + primeiraMaiuscula(jogo.getSecreto().getNome()));
-                }
-
             } else {
-                mensagemLabel.setText("Continue tentando!");
                 campoPalpite.requestFocus();
             }
 
@@ -131,6 +152,7 @@ public class PokedleController {
             mostrarErro("Erro ao verificar palpite", e);
         }
     }
+
 
 
     // CONTADOR DE TENTATIVAS

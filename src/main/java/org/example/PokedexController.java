@@ -21,6 +21,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
+import org.example.service.AudioService;
 
 public class PokedexController {
 
@@ -179,6 +180,7 @@ public class PokedexController {
         cartao.setStyle("-fx-background-color: white; -fx-background-radius: 12; "
                 + "-fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-padding: 12;");
         cartao.setOnMouseClicked(event -> {
+            AudioService.tocarClique();
             try {
                 App.mostrarDetalhes(pokemon);
             } catch (IOException e) {

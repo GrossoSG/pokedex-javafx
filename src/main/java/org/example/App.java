@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.example.model.Pokemon;
+import org.example.service.AudioService;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ButtonBase;
+import org.example.service.AudioService;
 
 import java.io.IOException;
 
@@ -20,6 +24,17 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("pokedex"), 1280, 720);
+
+
+        // CLIQUE GLOBAL DOS BOTÕES
+        scene.addEventFilter(ActionEvent.ACTION, event -> {
+
+            if (event.getTarget() instanceof ButtonBase) {
+                AudioService.tocarClique();
+            }
+
+        });
+
 
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.F11) {
@@ -35,6 +50,7 @@ public class App extends Application {
         stage.setFullScreen(true);
 
         stage.show();
+        AudioService.iniciarMusica();
     }
 
     static void setRoot(String fxml) throws IOException {
@@ -56,6 +72,11 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    @Override
+    public void stop() {
+        AudioService.pararMusica();
     }
 
 }
