@@ -30,9 +30,9 @@ public class App extends Application {
         stage.setScene(scene);
 
         //abre a janela já maximizada
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         //abre a janela já em tela cheia
-        //stage.setFullScreen(true);
+        stage.setFullScreen(true);
 
         stage.show();
     }
@@ -44,8 +44,8 @@ public class App extends Application {
     public static void mostrarDetalhes(Pokemon pokemon) throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("pokemon-detalhes.fxml"));
         Parent root = loader.load();
-        //PokemonDetalhesController controller = loader.getController();
-       // controller.setPokemon(pokemon);
+        PokemonDetalhesController controller = loader.getController();
+        controller.setPokemon(pokemon);
         scene.setRoot(root);
     }
 
