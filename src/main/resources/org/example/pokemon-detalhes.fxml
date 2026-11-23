@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.PokemonDetalhesController"
+            styleClass="details-page"
+            stylesheets="@../../css/pokemon-detalhes.css">
+    <top>
+        <HBox alignment="CENTER" spacing="28" styleClass="navigation-bar">
+            <Hyperlink text="Pokédex" styleClass="navigation-link"
+                       onMouseClicked="#switchToPokedex"/>
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link"
+                       onMouseClicked="#switchToCompara"/>
+            <Hyperlink text="Pokedle" styleClass="navigation-link"
+                       onMouseClicked="#switchToPokedle"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="18" styleClass="details-content">
+                    <GridPane hgap="12" styleClass="neighbor-navigation">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Button fx:id="previousButton" onAction="#mostrarAnterior" GridPane.columnIndex="0"
+                                maxWidth="Infinity" minHeight="48" styleClass="neighbor-button"/>
+                        <Button fx:id="nextButton" onAction="#mostrarProximo" GridPane.columnIndex="1"
+                                maxWidth="Infinity" minHeight="48" styleClass="neighbor-button"/>
+                    </GridPane>
+
+                    <Label fx:id="nomePokemonLabel" styleClass="pokemon-title"/>
+
+                    <GridPane hgap="18" vgap="16" styleClass="details-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <VBox spacing="16" GridPane.columnIndex="0" styleClass="detail-column">
+                            <VBox alignment="CENTER" spacing="8" styleClass="sprite-card">
+                                <ImageView fx:id="spriteImage" fitWidth="350" fitHeight="350"
+                                           preserveRatio="true" smooth="false"/>
+                            </VBox>
+
+                            <VBox spacing="12" styleClass="white-card stats-card">
+                                <Label text="Estatísticas Base" styleClass="section-title"/>
+                                <HBox fx:id="statsChartContainer" alignment="BOTTOM_CENTER" spacing="8"
+                                      minHeight="176" styleClass="stats-chart"/>
+                            </VBox>
+
+                        </VBox>
+
+                        <VBox spacing="14" GridPane.columnIndex="1" styleClass="detail-column">
+                            <Label fx:id="descricaoLabel" wrapText="true" minHeight="98"
+                                   styleClass="white-card description-card"/>
+
+                            <HBox spacing="12" styleClass="white-card information-card">
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="information-column">
+                                    <Label text="Altura" styleClass="field-label"/>
+                                    <Label fx:id="alturaLabel" styleClass="field-value"/>
+                                    <Label text="Peso" styleClass="field-label"/>
+                                    <Label fx:id="pesoLabel" styleClass="field-value"/>
+                                    <Label text="Sexo" styleClass="field-label"/>
+                                    <Label fx:id="sexoLabel" minHeight="24" styleClass="field-value"/>
+                                </VBox>
+                                <Region styleClass="information-divider"/>
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" styleClass="information-column">
+                                    <Label text="Categoria" styleClass="field-label"/>
+                                    <Label fx:id="categoriaLabel" styleClass="field-value"/>
+                                    <Label text="Habilidades" styleClass="field-label"/>
+                                    <VBox fx:id="habilidadesContainer" spacing="4" minHeight="42"/>
+                                    <Label text="Categoria Especial" styleClass="field-label"/>
+                                    <Label fx:id="categoriaEspecialLabel" minHeight="24" styleClass="special-badge"/>
+                                </VBox>
+                            </HBox>
+
+                            <VBox spacing="8" styleClass="white-card type-card">
+                                <Label text="Tipagem" styleClass="section-title"/>
+                                <HBox spacing="12">
+                                    <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" styleClass="type-slot">
+                                        <Label fx:id="tipo1Label" minHeight="30"/>
+                                    </VBox>
+                                    <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" styleClass="type-slot">
+                                        <Label fx:id="tipo2Label" minHeight="30"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+
+                            <VBox spacing="8" styleClass="white-card effectiveness-card">
+                                <HBox fx:id="fraquezasRow" alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Fraquezas:" minWidth="105" styleClass="field-label"/>
+                                    <FlowPane fx:id="fraquezasContainer" hgap="6" vgap="6" minHeight="28"
+                                              HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                                <HBox fx:id="resistenciasRow" alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Resistências:" minWidth="105" styleClass="field-label"/>
+                                    <FlowPane fx:id="resistenciasContainer" hgap="6" vgap="6" minHeight="28"
+                                              HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                                <HBox fx:id="imunidadesRow" alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Imunidades:" minWidth="105" styleClass="field-label"/>
+                                    <FlowPane fx:id="imunidadesContainer" hgap="6" vgap="6" minHeight="28"
+                                              HBox.hgrow="ALWAYS"/>
+                                </HBox>
+                            </VBox>
+
+                        </VBox>
+                    </GridPane>
+
+                    <GridPane hgap="18" styleClass="evolution-grid">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <VBox spacing="8" GridPane.columnIndex="0" alignment="CENTER">
+                            <Label text="Evolui de:" styleClass="section-title"/>
+                            <FlowPane fx:id="anteriorContainer" alignment="CENTER" hgap="8" vgap="8"
+                                      minHeight="112" prefHeight="112" styleClass="evolution-card"/>
+                        </VBox>
+                        <VBox spacing="8" GridPane.columnIndex="1" alignment="CENTER">
+                            <Label text="Evolui para:" styleClass="section-title"/>
+                            <FlowPane fx:id="posteriorContainer" alignment="CENTER" hgap="8" vgap="8"
+                                      minHeight="112" prefHeight="112" styleClass="evolution-card"/>
+                        </VBox>
+                    </GridPane>
+
+                    <HBox alignment="CENTER_RIGHT">
+                        <Button text="Voltar à Pokédex" onAction="#voltarParaPokedex"
+                                styleClass="back-button"/>
+                    </HBox>
+        </VBox>
+    </center>
+</BorderPane>
