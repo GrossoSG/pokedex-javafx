@@ -20,7 +20,7 @@
         <HBox alignment="CENTER" spacing="28" styleClass="compare-navigation">
             <Hyperlink text="Pokédex" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedex"/>
-            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link active"
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link"
                        onMouseClicked="#switchToCompara"/>
             <Hyperlink text="Pokedle" styleClass="navigation-link"
                        onMouseClicked="#switchToPokedle"/>
