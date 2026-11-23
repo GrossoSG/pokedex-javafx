@@ -44,8 +44,8 @@ public class App extends Application {
     public static void mostrarDetalhes(Pokemon pokemon) throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("pokemon-detalhes.fxml"));
         Parent root = loader.load();
-        PokemonDetalhesController controller = loader.getController();
-        controller.setPokemon(pokemon);
+        //PokemonDetalhesController controller = loader.getController();
+       // controller.setPokemon(pokemon);
         scene.setRoot(root);
     }
 

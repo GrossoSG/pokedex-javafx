@@ -139,9 +139,9 @@ public class PokedleService {
         // Gerar dicas
         String dicas =
                 "Pokémon: " + palpite.getNome() + "\n" +
-                "Tipo 1: " + palpite.getTipo1() + "\n" +
+                "Tipo 1: " + palpite.getTipo1() + " " +
                 comparar(palpite.getTipo1(), secreto.getTipo1()) + "\n" +
-                "Tipo 2: " + segundoTipo + "\n" +
+                "Tipo 2: " + segundoTipo + " " +
                 comparar(palpite.getTipo2(), secreto.getTipo2()) + "\n" +
                 "Total: " + palpite.calcularTotal() + " " +
                 comparar(palpite.calcularTotal(), secreto.calcularTotal()) + "\n" +
@@ -150,14 +150,12 @@ public class PokedleService {
                 "Peso: " + palpite.getPeso() + " " +
                 comparar(palpite.getPeso(), secreto.getPeso()) + "\n" +
                 "Estágio de Evolução: " + palpite.getEstagioEvolutivo() + " " +
-                comparar(palpite.getEstagioEvolutivo(), secreto.getEstagioEvolutivo()) + "\n" +
-                "Tentativas restantes: " + tentativasRestantes();
-
-        if (terminou()) {
-            dicas += "\nFim de jogo! Era: " + secreto.getNome();
-        }
+                comparar(palpite.getEstagioEvolutivo(), secreto.getEstagioEvolutivo()) + "\n";
 
         return dicas;
     }
 
+    public Pokemon getSecreto() {
+        return secreto;
+    }
 }

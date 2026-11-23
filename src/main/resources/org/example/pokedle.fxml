@@ -9,6 +9,8 @@
 
 
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.171"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.PokedleController">
@@ -21,8 +23,80 @@
         </HBox>
     </top>
 
+    <!-- CONTEÚDO DO JOGO -->
     <center>
-        <Label text="tela do jogo pokedle"/>
+        <VBox alignment="TOP_CENTER"
+              spacing="20"
+              maxWidth="900"
+              style="-fx-padding: 30;">
+
+            <!-- TÍTULO -->
+            <Label text="POKEDLE"
+                   style="-fx-font-size: 32px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #172033;"/>
+
+            <Label text="Adivinhe o Pokémon secreto!"
+                   style="-fx-font-size: 16px;
+                          -fx-text-fill: #64748b;"/>
+
+            <!-- TENTATIVAS -->
+            <Label fx:id="tentativasLabel"
+                   text="Tentativas restantes: 8"
+                   style="-fx-font-size: 17px;
+                          -fx-font-weight: bold;"/>
+
+            <!-- CAMPO DE PALPITE -->
+            <HBox alignment="CENTER"
+                  spacing="10"
+                  maxWidth="600">
+
+                <TextField fx:id="campoPalpite"
+                           promptText="Digite o nome de um Pokémon..."
+                           prefHeight="42"
+                           HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="botaoTentar"
+                        text="Tentar"
+                        onAction="#enviarPalpite"
+                        prefHeight="42"
+                        style="-fx-background-color: #BF0826;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-cursor: hand;"/>
+
+            </HBox>
+
+            <!-- MENSAGENS -->
+            <Label fx:id="mensagemLabel"
+                   text="Digite seu primeiro palpite!"
+                   wrapText="true"
+                   style="-fx-font-size: 15px;
+                          -fx-text-fill: #475569;"/>
+
+            <!-- NOVA PARTIDA -->
+            <Button text="Nova Partida"
+                    onAction="#novoJogo"
+                    style="-fx-background-color: #e2e8f0;
+                           -fx-text-fill: #172033;
+                           -fx-cursor: hand;"/>
+
+            <!-- HISTÓRICO -->
+            <Label text="Histórico de tentativas"
+                   style="-fx-font-size: 20px;
+                          -fx-font-weight: bold;"/>
+
+            <ScrollPane fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent;">
+
+                <VBox fx:id="historicoTentativas"
+                      spacing="12"
+                      style="-fx-padding: 10;"/>
+
+            </ScrollPane>
+
+        </VBox>
     </center>
 
 </BorderPane>
