@@ -2,18 +2,25 @@ package org.example;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.List;
+import java.util.Locale;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import org.example.dao.PokemonDAO;
 import org.example.model.Pokemon;
 import org.example.service.PokedleService;
@@ -28,7 +35,8 @@ public class PokedleController {
         return texto.substring(0, 1).toUpperCase() + texto.substring(1);
     }
 
-    @FXML private TextField campoPalpite;
+    // COMPONENTES
+    @FXML private ComboBox<Pokemon> campoPalpite;
     @FXML private Label tentativasLabel;
     @FXML private Label mensagemLabel;
     @FXML private VBox historicoTentativas;
@@ -37,11 +45,253 @@ public class PokedleController {
     private PokedleService jogo;
     private int tentativasFeitas;
 
+    // LISTA PARA A BUSCA
+    private final ObservableList<Pokemon> todosPokemons =
+            FXCollections.observableArrayList();
 
+    private FilteredList<Pokemon> pokemonsFiltrados;
+
+
+    // INICIALIZAR
     @FXML
     private void initialize() {
-        campoPalpite.setOnAction(event -> enviarPalpite());
-        novoJogo();
+
+        try {
+            PokemonDAO dao = new PokemonDAO();
+            todosPokemons.setAll(dao.listarTodos());
+
+            configurarBusca();
+            novoJogo();
+
+        } catch (SQLException e) {
+            campoPalpite.setDisable(true);
+            botaoTentar.setDisable(true);
+            mensagemLabel.setText("Erro ao carregar os Pokémon.");
+            mostrarErro("Erro ao carregar busca", e);
+        }
+    }
+
+
+    // CONFIGURAR BUSCA DOS POKEMON
+    private void configurarBusca() {
+
+        campoPalpite.setEditable(true);
+        campoPalpite.setVisibleRowCount(7);
+
+        // Como o Pokémon aparece no campo
+        campoPalpite.setConverter(new StringConverter<>() {
+
+            @Override
+            public String toString(Pokemon pokemon) {
+                return pokemon == null ? "" : formatarPokemon(pokemon);
+            }
+
+            @Override
+            public Pokemon fromString(String texto) {
+                return procurarPokemon(texto);
+            }
+        });
+
+        // Lista que pode ser filtrada
+        pokemonsFiltrados = new FilteredList<>(todosPokemons);
+
+        campoPalpite.setItems(pokemonsFiltrados);
+
+        // Células com imagem e nome
+        campoPalpite.setCellFactory(combo -> criarCelulaPokemon());
+        campoPalpite.setButtonCell(criarCelulaPokemon());
+
+        TextField editor = campoPalpite.getEditor();
+
+        // Filtrar enquanto o usuário digita
+        editor.textProperty().addListener(
+                (observable, anterior, texto) -> {
+
+                    Pokemon selecionado = campoPalpite.getValue();
+
+                    if (selecionado != null &&
+                            formatarPokemon(selecionado).equals(texto)) {
+                        return;
+                    }
+
+                    atualizarFiltroBusca();
+
+                    if (texto != null && !texto.isBlank()
+                            && !pokemonsFiltrados.isEmpty()) {
+
+                        campoPalpite.show();
+
+                    } else {
+                        campoPalpite.hide();
+                    }
+                }
+        );
+
+        // Pressionar Enter envia o palpite
+        editor.setOnAction(event -> enviarPalpite());
+
+        // Selecionar um Pokémon preenche o campo
+        campoPalpite.setOnAction(event -> {
+
+            Pokemon escolhido = campoPalpite.getValue();
+
+            if (escolhido != null) {
+                campoPalpite.getEditor().setText(
+                        formatarPokemon(escolhido)
+                );
+            }
+        });
+    }
+
+
+    // FILTRAR RESULTADOS
+    private void atualizarFiltroBusca() {
+
+        String texto = campoPalpite.getEditor().getText();
+
+        pokemonsFiltrados.setPredicate(
+                pokemon -> correspondeBusca(pokemon, texto)
+        );
+    }
+
+
+    // VERIFICAR SE CORRESPONDE A BUSCA
+    private boolean correspondeBusca(Pokemon pokemon, String texto) {
+
+        if (texto == null || texto.isBlank()) {
+            return true;
+        }
+
+        String termo = texto.trim().toLowerCase(Locale.ROOT);
+
+        String nome = pokemon.getNome().toLowerCase(Locale.ROOT);
+
+        String numero = String.valueOf(pokemon.getNumero());
+
+        String numeroFormatado = String.format(
+                "#%03d", pokemon.getNumero()
+        );
+
+        return nome.contains(termo)
+                || numero.contains(termo.replace("#", ""))
+                || numeroFormatado.contains(termo)
+                || formatarPokemon(pokemon)
+                .toLowerCase(Locale.ROOT).contains(termo);
+    }
+
+
+    // CRIAR OPÇÃO COM SPRITE
+    private ListCell<Pokemon> criarCelulaPokemon() {
+
+        return new ListCell<>() {
+
+            @Override
+            protected void updateItem(Pokemon pokemon, boolean vazio) {
+
+                super.updateItem(pokemon, vazio);
+
+                if (vazio || pokemon == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // Imagem
+                ImageView sprite = new ImageView();
+
+                sprite.setFitWidth(40);
+                sprite.setFitHeight(40);
+                sprite.setPreserveRatio(true);
+                sprite.setSmooth(false);
+
+                var url = getClass().getResource(
+                        "/sprites/" + pokemon.getNumero() + ".png"
+                );
+
+                if (url != null) {
+                    sprite.setImage(
+                            new Image(url.toExternalForm())
+                    );
+                }
+
+                // Nome e número
+                Label nome = new Label(formatarPokemon(pokemon));
+
+                nome.setStyle(
+                        "-fx-font-size: 15px;" +
+                                "-fx-text-fill: #172033;"
+                );
+
+                HBox conteudo = new HBox(12, sprite, nome);
+                conteudo.setAlignment(Pos.CENTER_LEFT);
+
+                setText(null);
+                setGraphic(conteudo);
+            }
+        };
+    }
+
+
+    // FORMATAR NOME E NUMERO
+    private String formatarPokemon(Pokemon pokemon) {
+
+        return String.format(
+                "#%03d %s",
+                pokemon.getNumero(),
+                primeiraMaiuscula(pokemon.getNome())
+        );
+    }
+
+
+    // ENCONTRAR POKEMON SELECIONADO
+    private Pokemon procurarPokemon(String texto) {
+
+        if (texto == null || texto.isBlank()) {
+            return null;
+        }
+
+        String busca = texto.trim().toLowerCase(Locale.ROOT);
+
+        // Procura pelo número
+        String numeroBusca = busca.replaceFirst("^#", "").trim();
+
+        if (numeroBusca.matches("\\d+")) {
+
+            try {
+                int numero = Integer.parseInt(numeroBusca);
+
+                for (Pokemon pokemon : todosPokemons) {
+                    if (pokemon.getNumero() == numero) {
+                        return pokemon;
+                    }
+                }
+
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        // Procura pelo nome ou texto formatado
+        for (Pokemon pokemon : todosPokemons) {
+
+            if (pokemon.getNome().equalsIgnoreCase(busca)
+                    || formatarPokemon(pokemon)
+                    .equalsIgnoreCase(busca)) {
+
+                return pokemon;
+            }
+        }
+
+        return null;
+    }
+
+
+    // LIMPAR CAMPO DA BUSCA
+    private void limparCampoBusca() {
+
+        campoPalpite.setValue(null);
+        campoPalpite.getEditor().clear();
+        campoPalpite.hide();
     }
 
 
@@ -55,7 +305,8 @@ public class PokedleController {
 
             historicoTentativas.getChildren().clear();
 
-            campoPalpite.clear();
+            limparCampoBusca();
+
             campoPalpite.setDisable(false);
             botaoTentar.setDisable(false);
 
@@ -76,7 +327,6 @@ public class PokedleController {
 
 
     // ENVIAR PALPITE
-
     @FXML
     private void enviarPalpite() {
 
@@ -84,20 +334,26 @@ public class PokedleController {
             return;
         }
 
-        String nome = campoPalpite.getText();
+        // Recebe o texto do ComboBox
+        String texto = campoPalpite.getEditor().getText();
 
-        // CAMPO VAZIO
-        if (nome == null || nome.isBlank()) {
+        if (texto == null || texto.isBlank()) {
             mensagemLabel.setText("Digite um Pokémon!");
             AudioService.tocarErro();
             return;
         }
 
+        // Descobre qual Pokémon foi escolhido
+        Pokemon selecionado = procurarPokemon(texto);
+
+        String nome = selecionado != null
+                ? selecionado.getNome()
+                : texto.trim();
+
         try {
             int tentativasAntes = jogo.tentativasRestantes();
 
-            // Verificar palpite
-            String resultado = jogo.tentar(nome.trim());
+            String resultado = jogo.tentar(nome);
 
             // POKÉMON INVÁLIDO OU REPETIDO
             if (tentativasAntes == jogo.tentativasRestantes()) {
@@ -110,10 +366,10 @@ public class PokedleController {
             tentativasFeitas++;
 
             // Adicionar ao histórico
-            adicionarAoHistorico(nome.trim(), resultado);
+            adicionarAoHistorico(nome, resultado);
 
             atualizarTentativas();
-            campoPalpite.clear();
+            limparCampoBusca();
 
             // ACERTOU
             if (resultado.startsWith("PARABÉNS!")) {
@@ -131,7 +387,10 @@ public class PokedleController {
 
                 if (jogo.terminou()) {
                     mensagemLabel.setText(
-                            "Fim de jogo! Era " + jogo.getSecreto().getNome()
+                            "Fim de jogo! Era " +
+                                    primeiraMaiuscula(
+                                            jogo.getSecreto().getNome()
+                                    )
                     );
                 } else {
                     mensagemLabel.setText("Continue tentando!");
@@ -145,14 +404,13 @@ public class PokedleController {
                 botaoTentar.setDisable(true);
 
             } else {
-                campoPalpite.requestFocus();
+                campoPalpite.getEditor().requestFocus();
             }
 
         } catch (Exception e) {
             mostrarErro("Erro ao verificar palpite", e);
         }
     }
-
 
 
     // CONTADOR DE TENTATIVAS
@@ -165,10 +423,8 @@ public class PokedleController {
 
 
     // HISTÓRICO DE PALPITES
-
     private void adicionarAoHistorico(String nome, String resultado) {
 
-        // Cartão horizontal: texto à esquerda e imagem à direita
         HBox cartao = new HBox(15);
         cartao.setAlignment(Pos.CENTER_LEFT);
         cartao.setMaxWidth(Double.MAX_VALUE);
@@ -181,7 +437,6 @@ public class PokedleController {
                         "-fx-padding: 15;"
         );
 
-        // Título da tentativa
         Label titulo = new Label(
                 "Tentativa " + tentativasFeitas + " - " + nome
         );
@@ -192,7 +447,6 @@ public class PokedleController {
                         "-fx-text-fill: #172033;"
         );
 
-        // Informações do palpite
         Label dicas = new Label(resultado);
         dicas.setWrapText(true);
 
@@ -201,14 +455,13 @@ public class PokedleController {
                         "-fx-text-fill: #475569;"
         );
 
-        // Agrupa título e informações na esquerda
         VBox textos = new VBox(8, titulo, dicas);
         textos.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(textos, Priority.ALWAYS);
 
         cartao.getChildren().add(textos);
 
-        // Busca o Pokémon para descobrir o número do sprite
+        // Sprite do Pokémon
         try {
             PokemonDAO dao = new PokemonDAO();
 
@@ -222,6 +475,7 @@ public class PokedleController {
                     var url = getClass().getResource(caminho);
 
                     if (url != null) {
+
                         ImageView sprite = new ImageView(
                                 new Image(url.toExternalForm())
                         );
@@ -231,7 +485,6 @@ public class PokedleController {
                         sprite.setPreserveRatio(true);
                         sprite.setSmooth(false);
 
-                        // Adiciona a imagem à direita
                         cartao.getChildren().add(sprite);
                     }
 
@@ -245,13 +498,11 @@ public class PokedleController {
             );
         }
 
-        // Tentativa mais recente aparece primeiro
         historicoTentativas.getChildren().add(0, cartao);
     }
 
 
     // TROCAS DE ABA
-
     @FXML
     private void switchToCompara() throws IOException {
         App.setRoot("compara");
@@ -267,6 +518,8 @@ public class PokedleController {
         App.setRoot("pokedex");
     }
 
+
+    // MOSTRAR ERROS
     private void mostrarErro(String titulo, Exception erro) {
 
         Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -277,5 +530,4 @@ public class PokedleController {
 
         alerta.showAndWait();
     }
-
 }

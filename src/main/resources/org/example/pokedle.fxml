@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-
+<?import javafx.scene.control.ComboBox?>
 
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.TextField?>
@@ -51,10 +51,12 @@
                   spacing="10"
                   maxWidth="600">
 
-                <TextField fx:id="campoPalpite"
-                           promptText="Digite o nome de um Pokémon..."
-                           prefHeight="42"
-                           HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="campoPalpite"
+                          editable="true"
+                          promptText="Digite o nome de um Pokémon..."
+                          prefHeight="42"
+                          maxWidth="Infinity"
+                          HBox.hgrow="ALWAYS"/>
 
                 <Button fx:id="botaoTentar"
                         text="Tentar"
