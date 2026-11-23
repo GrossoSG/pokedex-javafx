@@ -7,9 +7,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
@@ -49,6 +52,16 @@
                     <Label text="Tipo:" style="-fx-text-fill: #475569; -fx-font-weight: bold;"/>
                     <ComboBox fx:id="tipoCombo" prefWidth="150" onAction="#aplicarFiltros"/>
                     <ComboBox fx:id="quantidadeTiposCombo" prefWidth="160" onAction="#aplicarFiltros"/>
+                    <Button fx:id="filtroFavoritosButton" text="Favoritos" onAction="#alternarFiltroFavoritos"
+                            style="-fx-background-color: #fff7db; -fx-text-fill: #475569; -fx-background-radius: 8; -fx-padding: 7 12; -fx-cursor: hand;">
+                        <graphic>
+                            <ImageView fx:id="filtroFavoritosIcone" fitWidth="20" fitHeight="20"
+                                       preserveRatio="true" smooth="false"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="Mostrar somente Pokémon favoritos"/>
+                        </tooltip>
+                    </Button>
                     <Button text="Limpar filtros" onAction="#limparFiltros"
                             style="-fx-background-color: #e2e8f0; -fx-text-fill: #334155; -fx-background-radius: 8; -fx-padding: 8 14;"/>
                 </HBox>

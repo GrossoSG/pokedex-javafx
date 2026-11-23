@@ -1,25 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171"
+<BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.ComparaController">
-
+            fx:controller="org.example.ComparaController"
+            styleClass="compare-page"
+            stylesheets="@../../css/compara.css">
     <top>
-        <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #BF0826; -fx-padding: 12;">
-            <Hyperlink text="Pokedex" style="-fx-text-fill: white; -fx-cursor: hand;" onMouseClicked="#switchToPokedex"></Hyperlink>
-            <Hyperlink text="Comparar pokemon" style="-fx-text-fill: white; -fx-cursor: hand;" onMouseClicked="#switchToCompara"></Hyperlink>
-            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-cursor: hand;" onMouseClicked="#switchToPokedle"></Hyperlink>
+        <HBox alignment="CENTER" spacing="28" styleClass="compare-navigation">
+            <Hyperlink text="Pokédex" styleClass="navigation-link"
+                       onMouseClicked="#switchToPokedex"/>
+            <Hyperlink text="Comparar Pokémon" styleClass="navigation-link active"
+                       onMouseClicked="#switchToCompara"/>
+            <Hyperlink text="Pokedle" styleClass="navigation-link"
+                       onMouseClicked="#switchToPokedle"/>
         </HBox>
     </top>
 
     <center>
-        <Label text="Tela da comparação de pokemon"/>
-    </center>
+        <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" styleClass="compare-scroll">
+            <content>
+                <VBox spacing="18" styleClass="compare-content">
+                    <VBox spacing="6">
+                        <Label text="Comparar Pokémon" styleClass="page-title"/>
+                        <Label text="Compare atributos, estatísticas e efetividades lado a lado."
+                               styleClass="page-subtitle"/>
+                    </VBox>
 
+                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="selection-bar">
+                        <ComboBox fx:id="pokemonCombo" editable="true" prefWidth="360"
+                                  promptText="Buscar por nome ou número (#001–#151)"/>
+                        <Button fx:id="adicionarButton" text="+ Adicionar" onAction="#adicionarPokemon"
+                                styleClass="add-button"/>
+                        <Label fx:id="orientacaoLabel" wrapText="true" styleClass="selection-hint"/>
+                    </HBox>
+
+                    <VBox styleClass="comparison-card">
+                        <HBox alignment="CENTER_LEFT" spacing="8" styleClass="comparison-summary">
+                            <Label fx:id="contadorLabel" styleClass="counter-label"/>
+                            <Button fx:id="limparButton" text="Limpar" onAction="#limparComparacao"
+                                    styleClass="clear-button">
+                                <tooltip><Tooltip text="Remover todos os Pokémon da comparação"/></tooltip>
+                            </Button>
+                        </HBox>
+                        <VBox fx:id="comparisonContent" spacing="0"/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
 </BorderPane>

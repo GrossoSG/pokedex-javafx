@@ -3,14 +3,18 @@ package org.example;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TextField;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
@@ -18,10 +22,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
 import org.example.dao.PokemonDAO;
+import org.example.dao.FavoritoDAO;
 import org.example.model.Pokemon;
 import org.example.service.AudioService;
+import javafx.scene.input.MouseEvent;
 
 public class PokedexController {
 
@@ -42,6 +50,8 @@ public class PokedexController {
             Map.entry("psychic", "#ef4179"), Map.entry("rock", "#afa981"),
             Map.entry("steel", "#60a1b8"), Map.entry("water", "#2980ef")
     );
+    private static final String SPRITE_FAVORITO = "/sprites/Star-on.png";
+    private static final String SPRITE_NAO_FAVORITO = "/sprites/Star-offpng.png";
 
     @FXML private TextField campoBusca;
     @FXML private ComboBox<String> ordenacaoCombo;
@@ -49,8 +59,13 @@ public class PokedexController {
     @FXML private ComboBox<String> quantidadeTiposCombo;
     @FXML private Label resultadoLabel;
     @FXML private GridPane gradePokemons;
+    @FXML private Button filtroFavoritosButton;
+    @FXML private ImageView filtroFavoritosIcone;
 
     private List<Pokemon> pokemons = List.of();
+    private final Set<Integer> favoritos = new HashSet<>();
+    private final FavoritoDAO favoritoDAO = new FavoritoDAO();
+    private boolean filtrarFavoritos;
 
     @FXML
     private void initialize() {
@@ -68,9 +83,12 @@ public class PokedexController {
         quantidadeTiposCombo.getItems().setAll("Qualquer combinação", "Tipo único", "Tipo duplo");
         quantidadeTiposCombo.getSelectionModel().selectFirst();
         campoBusca.textProperty().addListener((observable, anterior, atual) -> atualizarGrade());
+        atualizarIconeFiltroFavoritos();
 
         try {
             pokemons = new PokemonDAO().listarTodos();
+            favoritos.clear();
+            favoritoDAO.listarFavoritos().forEach(pokemon -> favoritos.add(pokemon.getNumero()));
             atualizarGrade();
         } catch (SQLException e) {
             resultadoLabel.setText("Não foi possível carregar os Pokémon.");
@@ -109,7 +127,28 @@ public class PokedexController {
         ordenacaoCombo.getSelectionModel().selectFirst();
         tipoCombo.getSelectionModel().selectFirst();
         quantidadeTiposCombo.getSelectionModel().selectFirst();
+        filtrarFavoritos = false;
+        atualizarIconeFiltroFavoritos();
         atualizarGrade();
+    }
+
+    @FXML
+    private void alternarFiltroFavoritos() {
+        filtrarFavoritos = !filtrarFavoritos;
+        atualizarIconeFiltroFavoritos();
+        atualizarGrade();
+    }
+
+    private void atualizarIconeFiltroFavoritos() {
+        if (filtroFavoritosIcone != null) {
+            filtroFavoritosIcone.setImage(carregarSprite(filtrarFavoritos));
+            filtroFavoritosIcone.setSmooth(false);
+        }
+        if (filtroFavoritosButton != null) {
+            filtroFavoritosButton.setTooltip(new Tooltip(filtrarFavoritos
+                    ? "Exibindo somente Pokémon favoritos"
+                    : "Mostrar somente Pokémon favoritos"));
+        }
     }
 
     private void atualizarGrade() {
@@ -127,6 +166,7 @@ public class PokedexController {
                 : Comparator.comparingInt(Pokemon::getNumero);
 
         List<Pokemon> filtrados = pokemons.stream()
+                .filter(pokemon -> !filtrarFavoritos || favoritos.contains(pokemon.getNumero()))
                 .filter(pokemon -> correspondeBusca(pokemon, busca))
                 .filter(pokemon -> correspondeTipo(pokemon, tipoSelecionado, quantidadeTipos))
                 .sorted(ordem)
@@ -190,6 +230,22 @@ public class PokedexController {
 
         Label numero = new Label(String.format("#%03d", pokemon.getNumero()));
         numero.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-font-weight: bold;");
+        StackPane cabecalho = new StackPane(numero);
+        cabecalho.setMaxWidth(Double.MAX_VALUE);
+        StackPane.setAlignment(numero, Pos.CENTER);
+
+        Button favoritoButton = new Button();
+        ImageView favoritoIcone = new ImageView(carregarSprite(favoritos.contains(pokemon.getNumero())));
+        favoritoIcone.setFitWidth(20);
+        favoritoIcone.setFitHeight(20);
+        favoritoIcone.setPreserveRatio(true);
+        favoritoIcone.setSmooth(false);
+        favoritoButton.setGraphic(favoritoIcone);
+        favoritoButton.setFocusTraversable(false);
+        favoritoButton.setStyle("-fx-background-color: transparent; -fx-padding: 2; -fx-cursor: hand;");
+        favoritoButton.setOnMouseClicked(event -> alternarFavorito(pokemon, favoritoIcone, event));
+        StackPane.setAlignment(favoritoButton, Pos.TOP_RIGHT);
+        cabecalho.getChildren().add(favoritoButton);
 
         ImageView sprite = new ImageView();
         sprite.setFitWidth(112);
@@ -212,8 +268,38 @@ public class PokedexController {
             tipos.getChildren().add(criarEtiquetaTipo(pokemon.getTipo2()));
         }
 
-        cartao.getChildren().addAll(numero, sprite, nome, tipos);
+        cartao.getChildren().addAll(cabecalho, sprite, nome, tipos);
         return cartao;
+    }
+
+    private void alternarFavorito(Pokemon pokemon, ImageView icone, MouseEvent event) {
+        event.consume();
+        int numero = pokemon.getNumero();
+        boolean eraFavorito = favoritos.contains(numero);
+        try {
+            if (eraFavorito) {
+                favoritoDAO.removerFavorito(numero);
+                favoritos.remove(numero);
+            } else {
+                favoritoDAO.adicionarFavorito(numero);
+                favoritos.add(numero);
+            }
+            icone.setImage(carregarSprite(!eraFavorito));
+            if (filtrarFavoritos) {
+                atualizarGrade();
+            }
+        } catch (SQLException e) {
+            mostrarErro("Erro ao atualizar favoritos", e);
+        }
+    }
+
+    private Image carregarSprite(boolean favorito) {
+        String caminho = favorito ? SPRITE_FAVORITO : SPRITE_NAO_FAVORITO;
+        var url = getClass().getResource(caminho);
+        if (url == null) {
+            throw new IllegalStateException("Sprite de favorito não encontrado: " + caminho);
+        }
+        return new Image(url.toExternalForm());
     }
 
     private Label criarEtiquetaTipo(String tipo) {
