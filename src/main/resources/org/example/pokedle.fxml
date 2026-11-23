@@ -18,11 +18,11 @@
     <top>
         <HBox alignment="CENTER" spacing="28"
               style="-fx-background-color: #bf0826; -fx-padding: 14;">
-            <Hyperlink text="Pokédex" style="-fx-text-fill: white; -fx-underline: false;"
+            <Hyperlink text="Pokédex" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
                        onMouseClicked="#switchToPokedex"/>
-            <Hyperlink text="Comparar Pokémon" style="-fx-text-fill: white; -fx-underline: false;"
+            <Hyperlink text="Comparar Pokémon" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-underline: false;"
                        onMouseClicked="#switchToCompara"/>
-            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-underline: false;"
+            <Hyperlink text="Pokedle" style="-fx-text-fill: white; -fx-underline: false; -fx-font-weight: bold;"
                        onMouseClicked="#switchToPokedle"/>
         </HBox>
     </top>
